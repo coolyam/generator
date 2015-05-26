@@ -1,5 +1,8 @@
 .factorypath
 
+.idea/
+*.iml
+
 # /core/
 /core/.project
 /core/.settings
