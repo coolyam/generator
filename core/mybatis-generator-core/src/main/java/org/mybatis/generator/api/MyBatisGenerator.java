@@ -15,29 +15,25 @@
  */
 package org.mybatis.generator.api;
 
-import static org.mybatis.generator.internal.util.ClassloaderUtility.getCustomClassloader;
-import static org.mybatis.generator.internal.util.messages.Messages.getString;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.config.MergeConstants;
 import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.exception.ShellException;
 import org.mybatis.generator.internal.DefaultShellCallback;
-import org.mybatis.generator.internal.ObjectFactory;
 import org.mybatis.generator.internal.NullProgressCallback;
+import org.mybatis.generator.internal.ObjectFactory;
 import org.mybatis.generator.internal.XmlFileMergerJaxp;
+
+import java.io.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.mybatis.generator.internal.util.ClassloaderUtility.getCustomClassloader;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
  * This class is the main interface to MyBatis generator. A typical execution of the tool involves these steps:
@@ -219,12 +215,12 @@ public class MyBatisGenerator {
         }
         callback.introspectionStarted(totalSteps);
 
-        for (Context context : contextsToRun) {
+        for (Context context : contextsToRun) { // get all tables info & save to context
             context.introspectTables(callback, warnings,
                     fullyQualifiedTableNames);
         }
 
-        // now run the generates
+        // now run the generates, did not write files
         totalSteps = 0;
         for (Context context : contextsToRun) {
             totalSteps += context.getGenerationSteps();
@@ -240,7 +236,7 @@ public class MyBatisGenerator {
         callback.saveStarted(generatedXmlFiles.size()
                 + generatedJavaFiles.size());
 
-        for (GeneratedXmlFile gxf : generatedXmlFiles) {
+        for (GeneratedXmlFile gxf : generatedXmlFiles) { // write xml files
             projects.add(gxf.getTargetProject());
 
             File targetFile;
@@ -278,7 +274,7 @@ public class MyBatisGenerator {
             writeFile(targetFile, source, "UTF-8"); //$NON-NLS-1$
         }
 
-        for (GeneratedJavaFile gjf : generatedJavaFiles) {
+        for (GeneratedJavaFile gjf : generatedJavaFiles) { // write java files
             projects.add(gjf.getTargetProject());
 
             File targetFile;

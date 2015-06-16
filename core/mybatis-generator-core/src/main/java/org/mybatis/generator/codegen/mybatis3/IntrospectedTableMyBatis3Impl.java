@@ -15,9 +15,6 @@
  */
 package org.mybatis.generator.codegen.mybatis3;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -39,8 +36,12 @@ import org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
 import org.mybatis.generator.internal.ObjectFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * The Class IntrospectedTableMyBatis3Impl.
+ * The Class IntrospectedTableMyBatis3Impl. (generate the Mybatis3 style java and xml code,
+ *  getGeneratedJavaFiles() is the main method called by context for generating)
  *
  * @author Jeff Butler
  */
@@ -228,6 +229,7 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
     public List<GeneratedJavaFile> getGeneratedJavaFiles() {
         List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
 
+        // java model files
         for (AbstractJavaGenerator javaGenerator : javaModelGenerators) {
             List<CompilationUnit> compilationUnits = javaGenerator
                     .getCompilationUnits();
@@ -241,6 +243,7 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
             }
         }
 
+        // java client files
         for (AbstractJavaGenerator javaGenerator : clientGenerators) {
             List<CompilationUnit> compilationUnits = javaGenerator
                     .getCompilationUnits();
